@@ -1,56 +1,39 @@
+/* จัดตำแหน่งทุกอย่างให้อยู่ตรงกลางของหน้าจอ */
 body {
-    font:14px arial;
-    color: #222;
-    text-align:center;
-    padding:35px; }
-  
-form, p, span {
-    margin:0;
-    padding:0; 
-    font:14px arial;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
 }
-  
-input { 
-	font:14px arial; 
-}
-  
-#wrapper {
-    margin:0 auto;
-    padding-bottom:25px;
-    background:#EBF4FB;
-    width:504px;
-    border:1px solid #ACD8F0; }
 
- #loginform{
- 	margin: 20px auto;
- 	padding-top: 25px;
- 	padding-bottom:25px;
-    background:#EBF4FB;
-    width:504px;
-    border:1px solid #ACD8F0; 
+/* กำหนดกล่องหลักสำหรับเนื้อหา */
+.container {
+    text-align: center;
 }
- 
-#loginform { padding-top:18px; }
-  
-#chatbox {
-    text-align:left;
-    margin:0 auto;
-    margin-bottom:25px;
-    padding:10px;
-    background:#fff;
-    height:270px;
-    width:430px;
-    border:1px solid #ACD8F0;
-    overflow:auto; 
+
+/* จัดรูปแบบของปุ่ม */
+button {
+    margin: 5px; /* เว้นช่องว่างระหว่างปุ่มแต่ละปุ่ม */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
 }
-#usermsg {
-    width:395px;
-    border:1px solid #ACD8F0; }
-  
-#submit { width: 60px; }
-  
-#menu { padding:12.5px 25px 12.5px 25px; }
-  
-.welcome { display: inline; }
-  
-.message { margin:0 0 2px 0; }
+
+/* ตาราง */
+table {
+    margin-top: 20px;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+}

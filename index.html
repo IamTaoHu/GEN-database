@@ -7,64 +7,76 @@
     <script src="Database.js"></script>
 </head>
 <body>
-    <h2>ระบบคำนวณยอดขาย</h2>
+    <!-- กล่องหลักสำหรับการจัดตำแหน่งกลางหน้า -->
+    <div class="container">
+        <h1>ระบบคำนวณยอดขาย</h1>
 
-    <div>
-        <button id="bananaBtn" class="item-btn">กล้วยทอด</button>
-        <button id="potatoBtn" class="item-btn">มันทอด</button>
+        <!-- ปุ่มเลือกสินค้า -->
+        <div>
+            <button id="bananaBtn" class="item-btn">กล้วยทอด</button>
+            <button id="potatoBtn" class="item-btn">มันทอด</button>
+        </div>
+
+        <!-- ปุ่มเลือกจำนวนสินค้า -->
+        <div>
+            <button id="amount1" class="amount-btn">1</button>
+            <button id="amount2" class="amount-btn">2</button>
+            <button id="amount3" class="amount-btn">3</button>
+        </div>
+
+        <!-- ปุ่มยืนยัน -->
+        <button id="confirm">ยืนยัน</button>
+
+        <!-- ตารางแสดงข้อมูลการขาย -->
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th></th> <!-- เพิ่มคอลัมน์หัวสำหรับ checkbox -->
+                    <th>Order ID</th>
+                    <th>Item</th>
+                    <th>Time</th>
+                    <th>Amount</th>
+                    <th>Unit</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            
+            <tbody id="salesTableBody"></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5">Total Sum</td>
+                    <td id="totalSum">0</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <!-- ปุ่มเคลียร์ตารางทั้งหมด -->
+        <button id="deleteSelected">ลบแถวที่เลือก</button>
+        <button id="clearTableButton">เคลียร์ตารางทั้งหมด</button>
     </div>
 
-    <div>
-        <button id="amount1" class="amount-btn">1</button>
-        <button id="amount2" class="amount-btn">2</button>
-        <button id="amount3" class="amount-btn">3</button>
-    </div>
-
-    <button id="confirm">ยืนยัน</button>
-
-    <table id="data-table">
-        <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Item</th>
-                <th>Time</th>
-                <th>Amount</th>
-                <th>Unit</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody id="salesTableBody"></tbody>
-        <tfoot>
-            <tr>
-                <td colspan="5">Total Sum</td>
-                <td id="totalSum">0</td>
-            </tr>
-        </tfoot>
-    </table>
-
-	 <!-- ปุ่มเคลียร์ตารางทั้งหมด -->
-	 <button id="clearTableButton">เคลียร์ตารางทั้งหมด</button>
-
-	 <script>
-		 document.getElementById('clearTableButton').addEventListener('click', async () => {
-			 try {
-				 const response = await fetch('/clearLog', {
-					 method: 'POST',
-				 });
-				 const result = await response.json();
-				 
-				 if (result.success) {
-					 alert(result.message);
-					 // ล้างข้อมูลในตารางหน้าจอ (ถ้ามี)
-					 document.getElementById('data-table').innerHTML = '';
-				 } else {
-					 alert('ไม่สามารถล้างข้อมูลได้');
-				 }
-			 } catch (error) {
-				 console.error('เกิดข้อผิดพลาด:', error);
-				 alert('ไม่สามารถล้างข้อมูลได้');
-			 }
-		 });
-	 </script>
+    <script>
+        // ฟังก์ชันล้างข้อมูล log.json และอัปเดตตาราง
+        document.getElementById('clearTableButton').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/clearLog', {
+                    method: 'POST',
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(result.message);
+                    // ล้างข้อมูลในตารางหน้าจอ (ถ้ามี)
+                    document.getElementById('salesTableBody').innerHTML = '';
+                    document.getElementById('totalSum').textContent = '0';
+                } else {
+                    alert('ไม่สามารถล้างข้อมูลได้');
+                }
+            } catch (error) {
+                console.error('เกิดข้อผิดพลาด:', error);
+                alert('ไม่สามารถล้างข้อมูลได้');
+            }
+        });
+    </script>
 </body>
 </html>
