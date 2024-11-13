@@ -7,14 +7,17 @@ let selectedUnit = 0; // เพิ่มตัวแปรนี้เพื่�
 
 // ฟังก์ชันเริ่มต้น
 function pageLoad() {
-    document.getElementById("confirm").onclick = saveSelection;
+    document.getElementById("confirm").onclick = () => {
+        saveSelection();
+        loadLog(); // โหลดข้อมูลทันทีเมื่อบันทึก
+    };
     document.getElementById("bananaBtn").onclick = () => highlightButton("bananaBtn", "กล้วยทอด", 25);
     document.getElementById("potatoBtn").onclick = () => highlightButton("potatoBtn", "มันทอด", 25);
     document.getElementById("amount1").onclick = () => highlightButton("amount1", 1);
     document.getElementById("amount2").onclick = () => highlightButton("amount2", 2);
     document.getElementById("amount3").onclick = () => highlightButton("amount3", 3);
-    setInterval(loadLog, 3000); // Update log every 3 seconds
 }
+
 
 // ฟังก์ชันเลือกปุ่มและไฮไลท์
 function highlightButton(buttonId, item, unit = null) {
@@ -50,14 +53,6 @@ async function saveSelection() {
     });
 }
 
-// ฟังก์ชันโหลด log
-async function loadLog() {
-    await fetch('/loadLog')
-        .then(response => response.json())
-        .then(data => displayTable(data))
-        .catch(error => console.error("ไม่สามารถโหลด log ได้", error));
-}
-
 // เพิ่ม checkbox ในแต่ละแถว
 function addRowToTable(data) {
     const tableBody = document.getElementById("salesTableBody");
@@ -86,9 +81,7 @@ async function loadLog() {
             restoreCheckboxes(); // รีเซ็ตสถานะของ checkbox
         })
         .catch(error => console.error("ไม่สามารถโหลด log ได้", error));
-}
-
-// ฟังก์ชันแสดงข้อมูลในตาราง
+        // ฟังก์ชันแสดงข้อมูลในตาราง
 function displayTable(entries) {
     const tableBody = document.getElementById("salesTableBody");
     tableBody.innerHTML = ""; // Clear table
@@ -103,13 +96,9 @@ function displayTable(entries) {
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.classList.add("row-select");
+        checkbox.checked = selectedCheckboxes.includes(entry.orderId); // คืนค่า checkbox ที่เลือกไว้
         checkboxCell.appendChild(checkbox);
         row.appendChild(checkboxCell);
-
-        // ตรวจสอบว่ามีการเลือกแถวก่อนหน้าไหม
-        if (selectedCheckboxes.includes(entry.orderId)) {
-            checkbox.checked = true;
-        }
 
         // เพิ่มข้อมูลในแถว
         Object.values(entry).forEach(value => {
@@ -128,16 +117,18 @@ function displayTable(entries) {
 // ฟังก์ชันเก็บข้อมูลของ checkbox ที่ถูกเลือก
 function restoreCheckboxes() {
     const checkboxes = document.querySelectorAll(".row-select");
+    selectedCheckboxes = []; // เคลียร์ array เพื่อเก็บสถานะใหม่
+
     checkboxes.forEach((checkbox, index) => {
+        const orderId = parseInt(checkbox.closest("tr").cells[1].textContent);
         if (checkbox.checked) {
-            selectedCheckboxes.push(index + 1); // เก็บ ID ของแถวที่ถูกเลือก
+            selectedCheckboxes.push(orderId); // เก็บ orderId ของแถวที่ถูกเลือก
         }
     });
 }
 
 // ฟังก์ชันลบแถวที่ถูกเลือก
 async function deleteSelectedRows() {
-    // ดึงข้อมูลแถวที่ถูกเลือก
     const selectedRows = [];
     document.querySelectorAll(".row-select:checked").forEach(checkbox => {
         const row = checkbox.closest("tr");
@@ -157,7 +148,6 @@ async function deleteSelectedRows() {
     }
 
     try {
-        // ส่งข้อมูลแถวที่ถูกเลือกไปยังเซิร์ฟเวอร์
         const response = await fetch('/deleteSelectedRows', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -177,5 +167,5 @@ async function deleteSelectedRows() {
     }
 }
 
-// เพิ่มฟังก์ชัน deleteSelectedRows เมื่อคลิกปุ่ม "ลบแถวที่เลือก"
 document.getElementById('deleteSelected').onclick = deleteSelectedRows;
+}
