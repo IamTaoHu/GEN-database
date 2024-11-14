@@ -1,6 +1,6 @@
 /* จัดตำแหน่งทุกอย่างให้อยู่ตรงกลางของหน้าจอ */
 body {
-    display: flex;
+    /* display: flex; */
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -11,6 +11,7 @@ body {
 /* กำหนดกล่องหลักสำหรับเนื้อหา */
 .container {
     text-align: center;
+    margin: auto 30% auto 30%;
 }
 
 /* จัดรูปแบบของปุ่ม */
@@ -20,6 +21,9 @@ button {
     font-size: 16px;
     cursor: pointer;
 }
+
+.highlight {background-color: greenyellow;}
+
 
 /* ตาราง */
 table {

@@ -9,27 +9,30 @@ let selectedUnit = 0; // เพิ่มตัวแปรนี้เพื่�
 function pageLoad() {
     document.getElementById("confirm").onclick = () => {
         saveSelection();
-        loadLog(); // โหลดข้อมูลทันทีเมื่อบันทึก
+        
     };
     document.getElementById("bananaBtn").onclick = () => highlightButton("bananaBtn", "กล้วยทอด", 25);
     document.getElementById("potatoBtn").onclick = () => highlightButton("potatoBtn", "มันทอด", 25);
     document.getElementById("amount1").onclick = () => highlightButton("amount1", 1);
     document.getElementById("amount2").onclick = () => highlightButton("amount2", 2);
     document.getElementById("amount3").onclick = () => highlightButton("amount3", 3);
+    loadLog(); // โหลดข้อมูลทันทีเมื่อบันทึก
 }
 
 
 // ฟังก์ชันเลือกปุ่มและไฮไลท์
 function highlightButton(buttonId, item, unit = null) {
-    document.querySelectorAll('.item-btn, .amount-btn').forEach(btn => btn.classList.remove('highlight'));
-    document.getElementById(buttonId).classList.add('highlight');
 
     if (buttonId.includes("Btn")) {
+        document.querySelectorAll('.item-btn').forEach(btn => btn.classList.remove('highlight'));
         selectedItem = item;
         selectedUnit = unit;
     } else {
-        selectedAmount = item;
+        document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('highlight'));
+    selectedAmount = item;
     }
+    document.getElementById(buttonId).classList.add('highlight');
+
 }
 
 // ฟังก์ชันบันทึกข้อมูล
@@ -51,6 +54,8 @@ async function saveSelection() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(entry)
     });
+
+    loadLog();
 }
 
 // เพิ่ม checkbox ในแต่ละแถว

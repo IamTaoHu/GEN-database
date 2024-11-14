@@ -15,10 +15,11 @@ app.use(express.json());
 // อ่านข้อมูลจาก log.json
 app.get('/loadLog', async (req, res) => {
     try {
-        const data = JSON.parse(fs.readFileSync(logPath, 'utf8'));
+        const data = JSON.parse( await fs.readFileSync(logPath, 'utf8'));
         res.status(200).json(data);
     } catch (error) {
         res.status(500).json({ error: 'ไม่สามารถอ่านข้อมูลจาก log ได้' });
+
     }
 });
 
@@ -52,8 +53,11 @@ app.post('/deleteSelectedRows', async (req, res) => {
 
     try {
         const data = JSON.parse(await fs.promises.readFile(logPath, 'utf8'));
-
-        // กรองข้อมูลเพื่อเก็บเฉพาะแถวที่ไม่ตรงกับ selectedEntries
+        
+       //
+       
+       
+       //กรองข้อมูลเพื่อเก็บเฉพาะแถวที่ไม่ตรงกับ selectedEntries
         const updatedData = data.filter(entry => 
             !selectedEntries.some(selected => 
                 selected.item === entry.item &&
@@ -64,6 +68,17 @@ app.post('/deleteSelectedRows', async (req, res) => {
             )
         );
 
+        
+//        for (i = 0;i < data.length;i++) {
+//         for (m = 0;m < selectedEntries.length;m++){
+//             console.log(data[i].orderId , selectedEntries[m].orderId);
+//             if (i == selectedEntries[m].orderId){
+//                 console.log("delete row "+ selectedEntries[m].orderID);
+// data[i] = null;
+//             }
+            
+//         }
+//        }
         // เขียนข้อมูลที่ถูกกรองกลับไปที่ log.json
         await fs.promises.writeFile(logPath, JSON.stringify(updatedData, null, 2), 'utf8');
 
